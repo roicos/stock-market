@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({
 
 // routing
 const modulesDir = "./modules"
-require(modulesDir + "/routes")(express, app, path, bcrypt);
+require(modulesDir + "/routes")(express, app, path);
 
 
 // OTHER MODULES

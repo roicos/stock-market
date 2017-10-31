@@ -1,8 +1,11 @@
-module.exports = function (express, app, path, bcrypt) {
+module.exports = function (express, app, path) {
 
-	app.use(express.static(path.join(__dirname, "public")));
+	app.use(express.static(path.join(__dirname, "../public")));
 
-	app.get("/", checkAuth, function (req, res, next) {
+	app.get("/", function (req, res, next) {
+			var stock = require('./stocks.js');
+            var stock1 = new stock("GOOGL");
+            stock1.getJSON();
     		res.render("index");
     });
 
