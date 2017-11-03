@@ -17,12 +17,15 @@ app.use(bodyParser.urlencoded({
   	extended: true
 }));
 
-// routing
-const modulesDir = "./modules"
-require(modulesDir + "/routes")(express, app, path);
-
-
 // OTHER MODULES
+const modulesDir = "./modules"
+var stock = require(modulesDir + '/stock');
+
+// Global codes
+var codes = ["GOOGL", "AMZN", "AAPL", "LALA"];
+
+// routing
+require(modulesDir + "/routes")(express, app, path, stock, codes);
 
 // START THE APP
 app.listen(app.get('port'), function() {

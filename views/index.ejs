@@ -1,3 +1,52 @@
 <% include partial/header %>
-    Some content here
+<div class="row">
+    <div class="col-sm-1"></div>
+    <div id="graph" class="col-sm-10">Awesome graph will be here!</div>
+    <div class="col-sm-1"></div>
+</div>
+
+<div class="row">
+    <ul id="stocks" class="col-md-12">
+        <% for (var i=0; i < data.length; i++){%>
+        <li class="col-md-4 col-sm-6">
+            <div class="stock-wrapper">
+                <h4><%= data[i]%></h4>
+                <form action="removeStock" method="post">
+                    <input type="hidden" name="code" value="<%=data[i]%>"/>
+                    <span class="delStockIcon glyphicon glyphicon-remove-circle"></span>
+                    <input type="submit" class="delStock" value="" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>
+                </form>
+            </div>
+        </li>
+        <%}%>
+        <li class="col-md-4 col-sm-6" id="addStock">
+            <div class="stock-wrapper">
+                <form action="addStock" method="post">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="code"/>
+                        <span class="input-group-btn">
+                            <input class="btn" type="submit" value="add"/>
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
+<script>
+    function mouseoverHandler(elem){
+        var parent = elem.parentNode;
+        var icon = parent.getElementsByTagName("span")[0];
+        icon.style.color =  "#da8d77";
+    };
+
+    function mouseoutHandler(elem){
+        var parent = elem.parentNode;
+        var icon = parent.getElementsByTagName("span")[0];
+        icon.style.color =  "#96aab7";
+    };
+</script>
+
 <% include partial/footer %>

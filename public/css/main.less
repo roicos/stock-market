@@ -1,0 +1,98 @@
+/*http://colorpalettes.net/color-palette-2323/*/
+/*http://colorpalettes.net/color-palette-387/*/
+
+/*colors*/
+@black : #141514;
+@white: #f9f8f4;
+
+@darkBlue : #2c2c2d;
+@blue : #464e5d;
+@darkGrey: #4a4233;
+
+@lightBlue : #96aab7;
+@coral: #da8d77;
+@yellow: #ebb228;
+
+
+html, body {
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+body{
+	background-color: @darkBlue;
+	color: @lightBlue;
+	font-size: 14px;
+}
+
+#header{
+	width: 100%;
+	line-height: 20px;
+	padding: 20px;
+}
+
+#main{
+	background-color: @blue;
+	min-height: ~"calc(100% - 120px)"; /* 100% - header - footer */
+}
+
+#content{
+}
+
+#footer{
+	width: 100%;
+    line-height: 20px;
+    padding: 20px;
+}
+
+#graph{
+	min-height: 300px;
+}
+
+#stocks{
+	list-style: none;
+	overflow: hidden;
+}
+
+#stocks li .stock-wrapper{
+	height: 100px;
+	border: 1px solid @lightBlue;
+	border-left-width: 10px;
+	background-color: @white;
+	margin-bottom: 10px;
+	padding: 10px;
+	color: @darkGrey;
+	position: relative;
+}
+
+#stocks li .stock-wrapper:hover{
+	border-color: @coral;
+}
+
+#stocks li#addStock .stock-wrapper{
+	border-color: @yellow;
+}
+
+#stocks li .delStock{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	border: none;
+	background-color: transparent;
+}
+
+#stocks li .delStockIcon{
+	position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 16px;
+    color: @lightBlue;
+}
+
+#stocks li#addStock input[type="submit"]{
+	background-color: @yellow;
+}
