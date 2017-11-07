@@ -8,7 +8,7 @@ module.exports = {
 
 		googleFinance.historical({
           symbol: code,
-          from: "2017-01-01",
+          from: undefined,
           to: "2017-10-20"
         }, function (err, quotes) {
         	if(err){

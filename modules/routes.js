@@ -3,6 +3,7 @@ module.exports = function (express, app, path, stock, codes) {
 	app.use(express.static(path.join(__dirname, "../public")));
 
 	app.get("/", function (req, res, next) {
+		//var data = []; // data, in the same order
 		for(var i=0; i<codes.length; i++){
 			stock.getJSON(codes[i], function (error, result) {
 				if(error){
