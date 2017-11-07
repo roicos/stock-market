@@ -13,31 +13,46 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        data.addColumn('number', 'Kepler-22b mission');
-        data.addColumn('string', 'Kepler title');
-        data.addColumn('string', 'Kepler text');
-        data.addColumn('number', 'Gliese 163 mission');
-        data.addColumn('string', 'Gliese title');
-        data.addColumn('string', 'Gliese text');
+        data.addColumn('number', 'stock1');
+        data.addColumn('number', 'stock 2');
         data.addRows([
-          [new Date(2314, 2, 15), 12400, undefined, undefined,
-                                  10645, undefined, undefined],
-          [new Date(2314, 2, 16), 24045, 'Lalibertines', 'First encounter',
-                                  12374, undefined, undefined],
-          [new Date(2314, 2, 17), 35022, 'Lalibertines', 'They are very tall',
-                                  15766, 'Gallantors', 'First Encounter'],
-          [new Date(2314, 2, 18), 12284, 'Lalibertines', 'Attack on our crew!',
-                                  34334, 'Gallantors', 'Statement of shared principles'],
-          [new Date(2314, 2, 19), 8476, 'Lalibertines', 'Heavy casualties',
-                                  66467, 'Gallantors', 'Mysteries revealed'],
-          [new Date(2314, 2, 20), 0, 'Lalibertines', 'All crew lost',
-                                  79463, 'Gallantors', 'Omniscience achieved']
+          [new Date(2314, 2, 15), 15, 40],
+          [new Date(2314, 4, 16), 21, 55],
+          [new Date(2314, 5, 17), 38, 90],
+          [new Date(2314, 7, 18), 13, 29],
+          [new Date(2314, 9, 19), 15, 20],
+          [new Date(2314, 11, 20), 10, 25],
+          [new Date(2315, 2, 15), 15, 40],
+          [new Date(2315, 4, 16), 21, 55],
+          [new Date(2315, 5, 17), 38, 90],
+          [new Date(2315, 7, 18), 13, 29],
+          [new Date(2315, 9, 19), 15, 20],
+          [new Date(2315, 11, 20), 10, 25]
     ]);
 
     var chart = new google.visualization.AnnotationChart(document.getElementById('graph'));
 
         var options = {
-          displayAnnotations: false
+          displayAnnotations: false,
+          chart: {
+            backgroundColor: "#2c2c2d",
+            chartArea: {
+              backgroundColor: "#2c2c2d"
+            },
+            colors: ['#fcf5fc', '#d6543f', '#b7eebc', '#eaa6c5', '#a0d8ec', '#f79c42',],
+            lineWidth: 2,
+            hAxis: {
+                gridlines: {
+                    color: 'transparent'
+                }
+            },
+            vAxis: {
+                gridlines: {
+                    color: '#464e5d',
+                    lineWidth: 0.5,
+                }
+            }
+          }
         };
 
         chart.draw(data, options);
