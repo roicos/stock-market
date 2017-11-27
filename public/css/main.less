@@ -55,13 +55,52 @@ body{
 	background-color: @darkBlue;
 }
 
+#graph_AnnotationChart_borderDiv{
+	border: none;
+}
+
+#graph_AnnotationChart_zoomControlContainer {
+	color: @white;
+	font-size: 12px;
+}
+
+#graph_AnnotationChart_zoomControlContainer button{
+	width: 40px;
+	height: 20px;
+	color: @white;
+	font-size: 12px;
+	border-radius: 2px;
+	background-color: @blue;
+	outline: none;
+	border: 1px solid @blue;
+}
+
+#graph_AnnotationChart_legendContainer{
+	font-size: 12px;
+}
+
+#graph_AnnotationChart_rangeControlContainer g path{
+	stroke: @white;
+	fill: @blue;
+}
+
+#graph_AnnotationChart_rangeControlContainer rect{
+	fill: @darkBlue;
+	fill-opacity: 1;
+}
+
+#graph_AnnotationChart_rangeControlContainer rect:nth-child(2){
+	fill: @white;
+	fill-opacity: 0.1;
+}
+
 #stocks{
 	list-style: none;
 	overflow: hidden;
 }
 
 #stocks li .stock-wrapper{
-	height: 100px;
+	height: 55px;
 	border: 1px solid @lightBlue;
 	border-left-width: 10px;
 	background-color: @white;

@@ -1,15 +1,15 @@
 module.exports = {
 
-    getJSON : function (code, callback) {
+    getJSON : function (codes, callback) {
 		// https://github.com/pilwon/node-google-finance/blob/master/README.md
 		const q = require('q');
 		const googleFinance = require('google-finance');
 		var deferred = q.defer();
 
 		googleFinance.historical({
-          symbol: code,
+          symbols: codes,
           from: undefined,
-          to: "2017-10-20"
+          to: new Date()
         }, function (err, quotes) {
         	if(err){
         		deferred.reject("Error getting stock data for " + code);

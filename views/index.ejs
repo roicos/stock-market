@@ -16,18 +16,18 @@
         data.addColumn('number', 'stock1');
         data.addColumn('number', 'stock 2');
         data.addRows([
-          [new Date(2314, 2, 15), 15, 40],
-          [new Date(2314, 4, 16), 21, 55],
-          [new Date(2314, 5, 17), 38, 90],
-          [new Date(2314, 7, 18), 13, 29],
-          [new Date(2314, 9, 19), 15, 20],
-          [new Date(2314, 11, 20), 10, 25],
-          [new Date(2315, 2, 15), 15, 40],
-          [new Date(2315, 4, 16), 21, 55],
-          [new Date(2315, 5, 17), 38, 90],
-          [new Date(2315, 7, 18), 13, 29],
-          [new Date(2315, 9, 19), 15, 20],
-          [new Date(2315, 11, 20), 10, 25]
+          [new Date(2014, 2, 15), 15, 40],
+          [new Date(2014, 4, 16), 21, 55],
+          [new Date(2014, 5, 17), 38, 90],
+          [new Date(2014, 7, 18), 13, 29],
+          [new Date(2014, 9, 19), 15, 20],
+          [new Date(2014, 11, 20), 10, 25],
+          [new Date(2015, 2, 15), 15, 40],
+          [new Date(2015, 4, 16), 21, 55],
+          [new Date(2015, 5, 17), 38, 90],
+          [new Date(2015, 7, 18), 13, 29],
+          [new Date(2015, 9, 19), 15, 20],
+          [new Date(2015, 11, 20), 10, 25]
     ]);
 
     var chart = new google.visualization.AnnotationChart(document.getElementById('graph'));
@@ -40,17 +40,26 @@
               backgroundColor: "#2c2c2d"
             },
             colors: ['#fcf5fc', '#d6543f', '#b7eebc', '#eaa6c5', '#a0d8ec', '#f79c42',],
-            lineWidth: 2,
+            lineWidth: 1,
             hAxis: {
                 gridlines: {
                     color: 'transparent'
-                }
+                },
+                textStyle: {
+                  fontSize : 12,
+                  color: '#f9f8f4'
+                },
             },
             vAxis: {
+                baselineColor:'Red',
                 gridlines: {
                     color: '#464e5d',
                     lineWidth: 0.5,
-                }
+                },
+                textStyle: {
+                  fontSize : 12,
+                  color: '#f9f8f4'
+                },
             }
           }
         };
@@ -63,12 +72,12 @@
 
 <div class="row">
     <ul id="stocks" class="col-md-12">
-        <% for (var i=0; i < data.length; i++){%>
+        <% for (var i=0; i < symbols.length; i++){%>
         <li class="col-md-4 col-sm-6">
             <div class="stock-wrapper">
-                <h4><%= data[i]%></h4>
+                <h4><%= symbols[i]%></h4>
                 <form action="removeStock" method="post">
-                    <input type="hidden" name="code" value="<%=data[i]%>"/>
+                    <input type="hidden" name="symbol" value="<%=symbols[i]%>"/>
                     <span class="delStockIcon glyphicon glyphicon-remove-circle"></span>
                     <input type="submit" class="delStock" value="" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>
                 </form>
@@ -79,7 +88,7 @@
             <div class="stock-wrapper">
                 <form action="addStock" method="post">
                     <div class="input-group">
-                        <input class="form-control" type="text" name="code"/>
+                        <input class="form-control" type="text" name="symbol"/>
                         <span class="input-group-btn">
                             <input class="btn" type="submit" value="add"/>
                         </span>

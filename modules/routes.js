@@ -1,35 +1,37 @@
-module.exports = function (express, app, path, stock, codes) {
+module.exports = function (express, app, path, stock, symbols) {
 
 	app.use(express.static(path.join(__dirname, "../public")));
 
 	app.get("/", function (req, res, next) {
-		//var data = []; // data, in the same order
-		for(var i=0; i<codes.length; i++){
-			stock.getJSON(codes[i], function (error, result) {
-				if(error){
-					console.log(error);
-				} else {
-					console.log(result);
-				}
-			});
-		}
-		res.render("index", {"data" : codes});
+		stock.getJSON(symbols, function (error, result) {
+			if(error){
+				console.log(error);
+				res.render("index", {"symbols" : [], "data" : []});
+			} else {
+				console.log(result);
+				res.render("index", {"symbols" : symbols, "data" : []});
+			}
+		});
     });
 
     app.post("/addStock", function(req, res, next){
-		codes.push(req.body.code.trim().toUpperCase());
+    	var symbol = req.body.symbol.trim().toUpperCase();
+    	if(symbols.indexOf(symbol) == -1){
+    		symbols.push(symbol);
+    	}
 		res.redirect("/");
     });
 
     app.post("/removeStock", function(req, res, next){
-    	var newCodes = [];
-    	for(var i=0; i<codes.length; i++){
-    		if(codes[i] != req.body.code){
-    			newCodes.push(codes[i]);
+    	var newSymbols = [];
+    	for(var i=0; i<symbols.length; i++){
+    		if(symbols[i] != req.body.symbol){
+    			newSymbols.push(symbols[i]);
     		}
     	}
-    	codes = newCodes;
-    	newCodes = undefined;
+    	symbols = newSymbols;
+    	console.log(symbols);
+    	newSymbols = undefined;
     	res.redirect("/");
     });
 
