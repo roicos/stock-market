@@ -6,10 +6,15 @@ module.exports = {
 		const googleFinance = require('google-finance');
 		var deferred = q.defer();
 
+		var d = new Date();
+        var year = d.getFullYear();
+        var month = d.getMonth();
+        var day = d.getDate();
+        var twoYearsAgo = new Date(year - 2, month, day);
+
 		googleFinance.historical({
           symbols: codes,
-          from: undefined,
-          to: new Date()
+          from: twoYearsAgo,
         }, function (err, quotes) {
         	if(err){
         		deferred.reject("Error getting stock data for " + code);

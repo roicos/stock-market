@@ -7,28 +7,40 @@
 </div>
 
 <script>
-    google.charts.load('current', {'packages':['annotationchart']});
-    google.charts.setOnLoadCallback(drawChart);
+    var HOST = location.origin.replace(/^http/, 'ws');
+    console.log(HOST);
+    var ws = new WebSocket(HOST);
 
-    function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('date', 'Date');
-        data.addColumn('number', 'stock1');
-        data.addColumn('number', 'stock 2');
-        data.addRows([
-          [new Date(2014, 2, 15), 15, 40],
-          [new Date(2014, 4, 16), 21, 55],
-          [new Date(2014, 5, 17), 38, 90],
-          [new Date(2014, 7, 18), 13, 29],
-          [new Date(2014, 9, 19), 15, 20],
-          [new Date(2014, 11, 20), 10, 25],
-          [new Date(2015, 2, 15), 15, 40],
-          [new Date(2015, 4, 16), 21, 55],
-          [new Date(2015, 5, 17), 38, 90],
-          [new Date(2015, 7, 18), 13, 29],
-          [new Date(2015, 9, 19), 15, 20],
-          [new Date(2015, 11, 20), 10, 25]
-    ]);
+    ws.onmessage = function (event) {
+      console.log('Server time: ' + event.data);
+    };
+</script>
+
+<script>
+    var symbols = "<%=symbols%>".split(",");
+
+    var dataToShow = [];
+    <%for (var date in data){%>
+        var obj = [];
+        <%for(var key in data[date]){%>
+            obj[0] = new Date("<%=date%>");
+            obj[symbols.indexOf("<%=key%>")+1] = <%=data[date][key]%>;
+            dataToShow.push(obj);
+        <%}%>
+    <%}%>
+
+    google.charts.load('current', {'packages':['annotationchart']});
+    google.charts.setOnLoadCallback(function() {
+        drawChart(symbols, dataToShow);
+    });
+
+    function drawChart(symbols, data) {
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn('date', 'Date');
+        for(var i=0; i<symbols.length; i++){
+            dataTable.addColumn('number', symbols[i]);
+        };
+        dataTable.addRows(data);
 
     var chart = new google.visualization.AnnotationChart(document.getElementById('graph'));
 
@@ -64,7 +76,7 @@
           }
         };
 
-        chart.draw(data, options);
+        chart.draw(dataTable, options);
     }
 
 

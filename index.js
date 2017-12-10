@@ -22,12 +22,29 @@ const modulesDir = "./modules"
 var stock = require(modulesDir + '/stock');
 
 // Global codes
-var codes = ["GOOGL", "AMZN", "AAPL", "LALA"];
+var codes = ["GOOGL", "AMZN", "AAPL"];
 
 // routing
 require(modulesDir + "/routes")(express, app, path, stock, codes);
 
 // START THE APP
-app.listen(app.get('port'), function() {
+const server = app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
+
+const SocketServer = require('ws').Server;
+const wss = new SocketServer({server: server});
+
+wss.on('connection', function(ws){
+  console.log('Client connected');
+  ws.on('close', function(){console.log('Client disconnected')});
+});
+
+// brodcast events
+/*setInterval(function(){
+  wss.clients.forEach(function(client) {
+    client.send(new Date().toTimeString());
+  });
+}, 5000);*/
+
+
