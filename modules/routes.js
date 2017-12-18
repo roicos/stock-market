@@ -53,8 +53,8 @@ module.exports = function (express, app, wss, path, stock, symbols) {
 			if(error){
 				res.status(500).send("Error to remove stack: " + symbol + ", " + error);
 			} else {
+				console.log("broadcast notifications");
 				wss.clients.forEach(function(client) {
-				   // console.log("broadcast notification");
 				   client.send(JSON.stringify({"symbols" : symbols, "data" : result}));
 				});
 				res.status(200).send("OK");

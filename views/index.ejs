@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-sm-1"></div>
-    <div id="graph" class="col-sm-10">Awesome graph will be here!</div>
+    <div id="graph" class="col-sm-10"></div>
     <div class="col-sm-1"></div>
 </div>
 
@@ -34,7 +34,7 @@
     var ws = new WebSocket(HOST);
 
     ws.onmessage = function (event) {
-        // console.log("notification recieved");
+        console.log("notification recieved");
         var dataRecieved = JSON.parse(event.data);
 
         symbols = dataRecieved.symbols;
