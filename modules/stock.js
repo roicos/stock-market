@@ -9,7 +9,7 @@ module.exports = {
         var year = d.getFullYear();
         var month = d.getMonth();
         var day = d.getDate();
-        var twoYearsAgo = new Date(year - 2, month, day);
+        var fiveYearsAgo = new Date(year - 5, month, day);
 
         if(symbols.length == 0){
         	var data = {};
@@ -17,7 +17,7 @@ module.exports = {
         } else {
         	googleFinance.historical({
 			  symbols: symbols,
-			  from: twoYearsAgo,
+			  from: fiveYearsAgo,
 			}, function (error, result) {
 				if(error){
 					deferred.reject("Error getting stock data for: " + symbols);
@@ -28,11 +28,14 @@ module.exports = {
 							deferred.reject("Error getting stock data for: " + symbols);
 						} else {
 							var startValue = result[key][0].close;
+
+							//console.log(key + ": " + startValue);
+
 							for(var i=0; i<result[key].length; i++){
 								if(data[result[key][i].date] == undefined){
 									data[result[key][i].date] = {};
 								}
-								var value = (result[key][i].close/startValue)*100;
+								var value = ((result[key][i].close - startValue)/startValue)*100;
 								data[result[key][i].date][key] = value;
 							}
 						}

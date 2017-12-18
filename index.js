@@ -22,7 +22,7 @@ const modulesDir = "./modules"
 var stock = require(modulesDir + '/stock');
 
 // Global codes
-var symbols = ["GOOGL"];
+var symbols = ["GOOGL", "AMZN", "AAPL"];
 
 // START THE APP
 const server = app.listen(app.get('port'), function() {

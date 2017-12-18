@@ -10,6 +10,8 @@
 
     // First load
 
+    $(document).ready(function(){$("#addStock .error").hide();});
+
     var symbols = "<%=symbols%>".split(",");
     var dataToShow = [];
     <%for (var date in data){%>
@@ -47,19 +49,23 @@
             dataToShow.push(row);
         }
 
-        if(symbols.length > 0){
-            drawChart(symbols, dataToShow);
-        }
+        drawChart(symbols, dataToShow);
+        refreshStockList(symbols);
     };
 
     function drawChart(symbols, data) {
 
         var dataTable = new google.visualization.DataTable();
         dataTable.addColumn('date', 'Date');
-        for(var i=0; i<symbols.length; i++){
-            dataTable.addColumn('number', symbols[i]);
-        };
-        dataTable.addRows(data);
+        if(data.length == 0){
+            dataTable.addColumn('number', "-");
+            dataTable.addRow([new Date(), 0]);
+        } else {
+            for(var i=0; i<symbols.length; i++){
+                dataTable.addColumn('number', symbols[i]);
+            };
+            dataTable.addRows(data);
+        }
 
         var chart = new google.visualization.AnnotationChart(document.getElementById('graph'));
 
@@ -70,8 +76,8 @@
             chartArea: {
               backgroundColor: "#2c2c2d"
             },
-            colors: ['#fcf5fc', '#d6543f', '#b7eebc', '#eaa6c5', '#a0d8ec', '#f79c42',],
-            lineWidth: 1,
+            colors: ['#eaa6c5', '#a0d8ec', '#f79c42', '#fcf5fc', '#d6543f', '#b7eebc'],
+            lineWidth: 1.2,
             hAxis: {
                 gridlines: {
                     color: 'transparent'
@@ -82,7 +88,7 @@
                 },
             },
             vAxis: {
-                baselineColor:'Red',
+                baselineColor:'#464e5d',
                 gridlines: {
                     color: '#464e5d',
                     lineWidth: 0.5,
@@ -97,6 +103,23 @@
 
         chart.draw(dataTable, options);
     }
+
+    function refreshStockList(symbols){
+        var addStockElem = $("#addStock");
+        var stocks = $("#stocks");
+        stocks.empty();
+        for (var i=0; i < symbols.length; i++){
+            stocks.append('<li class="col-md-4 col-sm-6">'
+                            + '<div class="stock-wrapper">'
+                            + '<h4>' + symbols[i] +'</h4>'
+                            + '<form>'
+                            + '<span class="delStockIcon glyphicon glyphicon-remove-circle"></span>'
+                            + '<input class="delStock" onclick="removeStock(\''+ symbols[i] +'\')" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>'
+                            + ' </form></div></li>');
+        }
+        stocks.append(addStockElem);
+        $("#addStock .error").hide();
+    }
 </script>
 
 
@@ -107,16 +130,15 @@
             <div class="stock-wrapper">
                 <h4><%= symbols[i]%></h4>
                 <form>
-                    <input type="hidden" name="symbol" value="<%=symbols[i]%>"/>
                     <span class="delStockIcon glyphicon glyphicon-remove-circle"></span>
-                    <input class="delStock" value="" onclick="removeStock('<%=symbols[i]%>')" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>
+                    <input class="delStock" onclick="removeStock('<%=symbols[i]%>')" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>
                 </form>
             </div>
         </li>
         <%}%>
         <li class="col-md-4 col-sm-6" id="addStock">
             <div class="stock-wrapper">
-                <form onsubmit="addStock(this.children[0].children[0].value); return false">
+                <form onsubmit="addStock(this.children[0].children[0].value); return false" autocomplete="off">
                     <div class="input-group">
                         <input class="form-control" type="text" name="symbol"/>
                         <span class="input-group-btn">
@@ -124,8 +146,8 @@
                         </span>
                     </div>
                 </form>
+                <p class="error">Incorrect stock name.</p>
             </div>
-
         </li>
     </ul>
 </div>
@@ -150,6 +172,7 @@
             { symbol: symbol },
             function(data, status){
                 console.log("removeStosk - OK, \nStatus: " + status);
+                $("#addStock .error").hide();
             })
             .fail(function(error){
                 console.log("removeStosk - ERROR:  " + error);
@@ -162,9 +185,13 @@
             { symbol: symbol },
             function(data, status){
                 console.log("addStock - OK, \nStatus: " + status);
+                $("#addStock .error").hide();
+                $("#addStock input[name='symbol']").val("");
             })
             .fail(function(error){
                 console.log("addStosk - ERROR:  " + error);
+                $("#addStock .error").show();
+                $("#addStock input[name='symbol']").val("");
             });
         return false;
     }
