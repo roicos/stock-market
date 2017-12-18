@@ -7,26 +7,18 @@
 </div>
 
 <script>
-    var HOST = location.origin.replace(/^http/, 'ws');
-    console.log(HOST);
-    var ws = new WebSocket(HOST);
 
-    ws.onmessage = function (event) {
-      console.log('Server time: ' + event.data);
-    };
-</script>
+    // First load
 
-<script>
     var symbols = "<%=symbols%>".split(",");
-
     var dataToShow = [];
     <%for (var date in data){%>
-        var obj = [];
+        var row = [];
+        row[0] = new Date("<%=date%>");
         <%for(var key in data[date]){%>
-            obj[0] = new Date("<%=date%>");
-            obj[symbols.indexOf("<%=key%>")+1] = <%=data[date][key]%>;
-            dataToShow.push(obj);
+            row[symbols.indexOf("<%=key%>")+1] = <%=data[date][key]%>;
         <%}%>
+        dataToShow.push(row);
     <%}%>
 
     google.charts.load('current', {'packages':['annotationchart']});
@@ -34,7 +26,34 @@
         drawChart(symbols, dataToShow);
     });
 
+    // Web sockets
+
+    var HOST = location.origin.replace(/^http/, 'ws');
+    var ws = new WebSocket(HOST);
+
+    ws.onmessage = function (event) {
+        // console.log("notification recieved");
+        var dataRecieved = JSON.parse(event.data);
+
+        symbols = dataRecieved.symbols;
+
+        dataToShow = [];
+        for (var date in dataRecieved.data){
+            var row = [];
+            row[0] = new Date(date);
+            for(var key in dataRecieved.data[date]){
+                row[symbols.indexOf(key)+1] = dataRecieved.data[date][key];
+            }
+            dataToShow.push(row);
+        }
+
+        if(symbols.length > 0){
+            drawChart(symbols, dataToShow);
+        }
+    };
+
     function drawChart(symbols, data) {
+
         var dataTable = new google.visualization.DataTable();
         dataTable.addColumn('date', 'Date');
         for(var i=0; i<symbols.length; i++){
@@ -42,7 +61,7 @@
         };
         dataTable.addRows(data);
 
-    var chart = new google.visualization.AnnotationChart(document.getElementById('graph'));
+        var chart = new google.visualization.AnnotationChart(document.getElementById('graph'));
 
         var options = {
           displayAnnotations: false,
@@ -78,9 +97,8 @@
 
         chart.draw(dataTable, options);
     }
-
-
 </script>
+
 
 <div class="row">
     <ul id="stocks" class="col-md-12">
@@ -88,21 +106,21 @@
         <li class="col-md-4 col-sm-6">
             <div class="stock-wrapper">
                 <h4><%= symbols[i]%></h4>
-                <form action="removeStock" method="post">
+                <form>
                     <input type="hidden" name="symbol" value="<%=symbols[i]%>"/>
                     <span class="delStockIcon glyphicon glyphicon-remove-circle"></span>
-                    <input type="submit" class="delStock" value="" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>
+                    <input class="delStock" value="" onclick="removeStock('<%=symbols[i]%>')" onmouseout="mouseoutHandler(this)" onmouseover="mouseoverHandler(this)"/>
                 </form>
             </div>
         </li>
         <%}%>
         <li class="col-md-4 col-sm-6" id="addStock">
             <div class="stock-wrapper">
-                <form action="addStock" method="post">
+                <form onsubmit="addStock(this.children[0].children[0].value); return false">
                     <div class="input-group">
                         <input class="form-control" type="text" name="symbol"/>
                         <span class="input-group-btn">
-                            <input class="btn" type="submit" value="add"/>
+                            <input type="submit" class="btn" value="add" />
                         </span>
                     </div>
                 </form>
@@ -113,6 +131,7 @@
 </div>
 
 <script>
+
     function mouseoverHandler(elem){
         var parent = elem.parentNode;
         var icon = parent.getElementsByTagName("span")[0];
@@ -124,6 +143,31 @@
         var icon = parent.getElementsByTagName("span")[0];
         icon.style.color =  "#96aab7";
     };
+
+    function removeStock(symbol){
+        console.log("remove stock: " + symbol);
+        $.post("removeStock",
+            { symbol: symbol },
+            function(data, status){
+                console.log("removeStosk - OK, \nStatus: " + status);
+            })
+            .fail(function(error){
+                console.log("removeStosk - ERROR:  " + error);
+            });
+    }
+
+    function addStock(symbol){
+        console.log("add stock: " + symbol);
+        $.post("addStock",
+            { symbol: symbol },
+            function(data, status){
+                console.log("addStock - OK, \nStatus: " + status);
+            })
+            .fail(function(error){
+                console.log("addStosk - ERROR:  " + error);
+            });
+        return false;
+    }
 </script>
 
 <% include partial/footer %>
